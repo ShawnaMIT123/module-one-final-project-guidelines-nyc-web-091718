@@ -9,5 +9,6 @@ require_relative '../lib/command_line_interface.rb'
 
 welcome
 get_login
+#search_nutrition_info
+#show_goals
 user_action
-log_a_meal
