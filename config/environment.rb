@@ -1,5 +1,6 @@
 require 'bundler'
 Bundler.require
+Dotenv.load
 
 # require 'rake'
 # require 'active_record'
