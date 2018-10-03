@@ -1,0 +1,13 @@
+User.create(name: "Shawna Davis", calorie_goal: 1250, fat_goal: 27, carbs_goal: 25, protein_goal: 50)
+User.create(name: "Scoti Dodson", calorie_goal: 1400, fat_goal: 20, carbs_goal: 28, protein_goal: 60)
+User.create(name: "Roger Vera", calorie_goal: 2300, fat_goal: 22, carbs_goal: 20, protein_goal: 30)
+User.create(name: "Shelby Trinca", calorie_goal: 1200, fat_goal: 13, carbs_goal: 60, protein_goal: 100)
+User.create(name: "Devon Darrow", calorie_goal: 1200, fat_goal: 26, carbs_goal: 20, protein_goal: 30)
+User.create(name: "Albert Chin", calorie_goal: 3000, fat_goal: 50, carbs_goal: 100, protein_goal: 200)
+
+Meal.create(name: "Chicken Salad", calorie: 300, fat: 13, carbs: 6, protein: 15)
+Meal.create(name: "Chocalate Cake", calorie: 200, fat: 20, carbs: 7, protein: 0)
+Meal.create(name: "Southwest Salad", calorie: 100, fat: 06, carbs: 8, protein: 8)
+Meal.create(name: "Vegetable Stirfry", calorie: 500, fat: 10, carbs: 25, protein: 2)
+Meal.create(name: "Bacon Lettuce Tomato", calorie: 450, fat: 13, carbs: 26, protein: 10)
+Meal.create(name: "Bagel with Lox", calorie: 350, fat: 15, carbs: 7, protein: 6)
