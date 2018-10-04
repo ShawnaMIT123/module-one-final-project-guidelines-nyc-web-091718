@@ -6,7 +6,7 @@ require_relative '../app/models/user_meal.rb'
 require_relative './api_communicator.rb'
 
 def welcome
-puts "Welcome to Nutrition Log CLI!"
+  puts "Welcome to Nutrition Log CLI!"
 end
 
 def get_login
@@ -26,9 +26,8 @@ def get_login
      get_login
   end
   $user_profile = User.find_by(name:name)
-  puts "Welcome #{name}!"
+  puts "\nWelcome #{name}!"
 end
-
 
 def user_action
   puts "\nWhat would you like to do? Input a number to indicate choice."
@@ -126,7 +125,6 @@ end
 #   usermealinstances = UserMeal.where(user_id: $user_profile, date: date)
 #
 # end
-
 
 def show_goals
   puts "\nCURRENT DAILY CALORIE GOAL: #{$user_profile.calorie_goal}"
@@ -272,15 +270,32 @@ end
 
 def highest_calorie_meals
   #shows top 3 highest cal meals
+  top_three = $user_profile.user_meals.group_by{|x| x.meal.calorie}.sort_by{|cal, array| cal}.reverse.slice(0,3)
 
-  analytics_menu
+  top_three.each do |cal, array|
+    array.each do |user_meal|
+      puts "\n     #{user_meal.meal.name}, #{user_meal.meal.calorie} calories (#{user_meal.date})"
+    end
+  end
+
+  user_action
 end
 
 def favorite_meals
-  #shows most common meal logged
+  usermeals = $user_profile.meals.group_by do |mealinstance|
+    mealinstance.name
+  end
+  sortedmeals = usermeals.sort_by{|mealname, mealarray| mealarray.count}
+  mostpopular = sortedmeals.last
 
+  if mostpopular[1].count == 1
+    puts "\nNot enough logs. Keep logging!"
+  else
+    puts "\Your most popular meal #{mostpopular[0]} has been logged #{mostpopular[1].count} times."
+  end
+  #shows most common meal logged
   analytics_menu
 end
 
 
-### HELPER METHODS ###
+# ### HELPER METHODS ###
