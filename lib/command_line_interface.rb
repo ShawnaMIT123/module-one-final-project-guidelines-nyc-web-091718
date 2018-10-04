@@ -13,16 +13,16 @@ def get_login
   puts "Do you have an existing account. (Y/N)"
   response = gets.chomp
   if response.upcase == "N"
-    puts "Enter your fullname."
+    puts "\nEnter your first & last name."
     name = gets.chomp
-    puts "What's your daily calorie goal?"
+    puts "\nWhat's your daily calorie goal?"
     goal = gets.chomp
     User.create(name: name, calorie_goal: goal)
   elsif response.upcase == "Y"
-    puts "Enter your fullname."
+    puts "\nEnter your fullname."
     name = gets.chomp
    else
-     puts "Please try again and enter Y or N"
+     puts "\nPlease try again and enter Y or N"
      get_login
   end
   $user_profile = User.find_by(name:name)
@@ -52,15 +52,15 @@ def user_action
     when 6
       puts "Goodbye, #{$user_profile.name}!"
     else
-      puts "Please enter a number 1-6."
+      puts "\nPlease enter a number 1-6."
       user_action
   end
 end
 
 def log_a_meal
-  puts "Whats the name of the meal you would like to log?"
+  puts "\nWhat's the name of the meal you would like to log?"
     meal = gets.chomp
-  puts "Great! What date would you like to log your meal for? (YYYY-MM-DD)"
+  puts "\nGreat! What date would you like to log your meal for? (YYYY-MM-DD)"
     date = gets.chomp
 
    if Meal.find_by(name: meal) != nil
@@ -86,7 +86,7 @@ def view_meals
   usermealsbydateinstances = UserMeal.where(user_id: $user_profile, date: date)
    usermealsbydateinstances.each do |instance|
        mealname = Meal.find_by(id: instance.meal_id)
-        puts "     #{mealname.name} cals: #{mealname.calorie}, fat: #{mealname.fat}, carbs: #{mealname.carbs}, protein: #{mealname.protein}\n"
+        puts "     #{mealname.name}\n          CAL: #{mealname.calorie}, FAT: #{mealname.fat}, CARBS: #{mealname.carbs}, PROTEIN: #{mealname.protein}\n"
     end
   end
 user_action
@@ -98,7 +98,7 @@ def search_nutrition_info
 
    if Meal.find_by(name: meal) != nil
      mealinstance = Meal.find_by(name: meal)
-     puts "\n#{mealinstance.name} cals: #{mealinstance.calorie}, fat: #{mealinstance.fat}, carbs: #{mealinstance.carbs}, protein: #{mealinstance.protein}"
+     puts "\n#{mealinstance.name}\n     CAL: #{mealinstance.calorie}, FAT: #{mealinstance.fat}, CARBS: #{mealinstance.carbs}, PROTEIN: #{mealinstance.protein}"
   else
     response_hash = ask_api(meal)
     cal = response_hash["calories"]["value"]
@@ -107,7 +107,7 @@ def search_nutrition_info
     pr = response_hash["protein"]["value"]
     m = Meal.create(name: meal, calorie: cal, fat: f, carbs: c, protein: pr)
     # do we need to store unit?
-    puts "\n#{m.name} cals: #{m.calorie}, fat: #{m.fat}, carbs: #{m.carbs}, protein: #{m.protein}\n"
+    puts "\n#{m.name}\n     CAL: #{m.calorie}, FAT: #{m.fat}, CARBS: #{m.carbs}, PROTEIN: #{m.protein}"
   end
 user_action
 end
@@ -127,15 +127,15 @@ end
 # end
 
 def show_goals
-  puts "\nCURRENT DAILY CALORIE GOAL: #{$user_profile.calorie_goal}"
-  puts "        DAILY FAT GOAL: #{$user_profile.fat_goal}"
-  puts "        DAILY CARBS GOAL: #{$user_profile.carbs_goal}"
-  puts "        DAILY PROTEIN GOAL: #{$user_profile.protein_goal}"
+  puts "\nCURRENT DAILY CALORIE GOAL: #{$user_profile.calorie_goal} calories"
+  puts "        DAILY FAT GOAL: #{$user_profile.fat_goal} grams"
+  puts "        DAILY CARBS GOAL: #{$user_profile.carbs_goal} grams"
+  puts "        DAILY PROTEIN GOAL: #{$user_profile.protein_goal} grams"
 end
 
 def update_goals
   show_goals
-  puts "\nWhat goal would you like to update? Input a number to indicate choice."
+  puts "\nWhich goal would you like to update? Input a number to indicate choice."
   puts "   1. Calorie"
   puts "   2. Fat"
   puts "   3. Carbs"
@@ -168,7 +168,7 @@ end
 
 def analytics_menu
   puts "\nWhat would you like to review?"
-  puts "   1. Nutrition Goals vs. Logged Meals"
+  puts "   1. Calorie Goals vs. Actual"
   puts "   2. View Logged Meals Over 500 calories"
   puts "   3. View Highest Calorie Meals"
   puts "   4. View Favorite Meals"
@@ -189,7 +189,7 @@ def analytics_menu
       when 4
         favorite_meals
       else
-        puts "Please enter a number 1-5."
+        puts "\nPlease enter a number 1-5."
         analytics_menu
     end
   end
@@ -232,13 +232,13 @@ def goal_progress
     puts "\n#{date} -- Daily Total: #{calories_logged.to_i} calories."
       if calories_logged > cal_goal
         over = (((calories_logged - cal_goal)/cal_goal) * 100).round
-        puts "Uh oh! You have exceeded your daily calorie goal by #{over}%."
+        puts "\nUh oh! You have exceeded your daily calorie goal by #{over}%."
       elsif calories_logged < cal_goal
         used = ((calories_logged/cal_goal) * 100).round
         remainder = (cal_goal - calories_logged).to_i
-        puts "You have used #{used}% of your calories for the day. #{remainder} calories remaining."
+        puts "\nYou have used #{used}% of your calories for the day. #{remainder} calories remaining."
       elsif calories_logged == cal_goal
-        puts "Congratulations! You met your goal."
+        puts "\nCongratulations! You met your goal."
       end
     hash[:logged].each do |i, meal|
       puts "     #{meal}"
@@ -258,9 +258,9 @@ def calorie_dense_meals
   end
 
   if calorie_dense.empty?
-    puts "You have not logged any meals over 500 calories."
+    puts "\nYou have not logged any meals over 500 calories."
   else
-    puts "You've logged these high calorie meals:"
+    puts "\nYou've logged these high calorie meals:"
     calorie_dense.each do |meal|
       puts "     #{meal}"
     end
@@ -271,10 +271,10 @@ end
 def highest_calorie_meals
   #shows top 3 highest cal meals
   top_three = $user_profile.user_meals.group_by{|x| x.meal.calorie}.sort_by{|cal, array| cal}.reverse.slice(0,3)
-
+  puts "\nThese are your logged meals with the highest calorie counts:"
   top_three.each do |cal, array|
     array.each do |user_meal|
-      puts "\n     #{user_meal.meal.name}, #{user_meal.meal.calorie} calories (#{user_meal.date})"
+      puts "     #{user_meal.meal.name}, #{user_meal.meal.calorie} calories (#{user_meal.date})"
     end
   end
 
@@ -291,7 +291,7 @@ def favorite_meals
   if mostpopular[1].count == 1
     puts "\nNot enough logs. Keep logging!"
   else
-    puts "\Your most popular meal #{mostpopular[0]} has been logged #{mostpopular[1].count} times."
+    puts "\nYour most popular meal is #{mostpopular[0]}. It has been logged #{mostpopular[1].count} times."
   end
   #shows most common meal logged
   analytics_menu
